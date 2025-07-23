@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-// import { useTheme } from '@context/ThemeContext';
-// import { wp, hp, normalize } from '@utils/responsive';
 import { useTheme } from 'context/ThemeContext';
 import { hp, normalize, wp } from '@utils/responsive';
 
@@ -10,6 +8,7 @@ interface InputProps {
   placeholder?: string;
   value: string;
   onChangeText: (text: string) => void;
+  rightIconPress?: () => void;
   error?: string;
   secureTextEntry?: boolean;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
@@ -33,6 +32,7 @@ export const Input: React.FC<InputProps> = ({
   editable = true,
   rightIcon,
   leftIcon,
+  rightIconPress
 }) => {
   const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
@@ -60,7 +60,11 @@ export const Input: React.FC<InputProps> = ({
           </View>
         )}
         <TextInput
-          style={[inputStyle, leftIcon && styles.inputWithLeftIcon, rightIcon && styles.inputWithRightIcon]}
+          style={[
+            inputStyle,
+            leftIcon ? styles.inputWithLeftIcon : undefined,
+            rightIcon ? styles.inputWithRightIcon : undefined,
+          ]}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textSecondary}
           value={value}
@@ -74,7 +78,7 @@ export const Input: React.FC<InputProps> = ({
           onBlur={() => setIsFocused(false)}
         />
         {rightIcon && (
-          <TouchableOpacity style={styles.iconContainer}>
+          <TouchableOpacity onPress={rightIconPress} style={styles.iconContainer}>
             {rightIcon}
           </TouchableOpacity>
         )}
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
+    
   },
   input: {
     flex: 1,
@@ -119,6 +124,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     padding: wp(2),
     zIndex: 1,
+    right: 3
   },
   error: {
     fontSize: normalize(12),

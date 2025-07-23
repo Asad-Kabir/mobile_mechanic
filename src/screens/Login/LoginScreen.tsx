@@ -1,12 +1,9 @@
-import { Button, Input } from '@components/index';
+import { Button, Icon, Input } from '@components/index';
 import { hp, normalize, wp } from '@utils/responsive';
 import { useAuth } from 'context/AuthContext';
 import { useTheme } from 'context/ThemeContext';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-// import { useTheme, useAuth } from '@context';
-// import { Button, Input } from '@components';
-// import { wp, hp, normalize } from '@utils/responsive';
 
 export const LoginScreen: React.FC = () => {
   const { theme } = useTheme();
@@ -15,6 +12,7 @@ export const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
   const validateForm = () => {
@@ -88,9 +86,11 @@ export const LoginScreen: React.FC = () => {
             label="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={secureTextEntry}  
             placeholder="Enter your password"
             error={errors.password}
+            rightIcon={ <Text style={{ color: theme.colors.primary }}>{!secureTextEntry ? 'Hide' : 'Show'}</Text>}
+            rightIconPress={() => setSecureTextEntry(!secureTextEntry)}
           />
 
           <Button
